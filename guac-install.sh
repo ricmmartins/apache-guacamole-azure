@@ -7,11 +7,11 @@ GUACVERSION="0.9.14"
 apt update
 
 # Get MySQL root password and Guacamole User password
-guacdbuserpassword="Password01@2018!"
-guacmysqlhostname="guacamoledemodb.mysql.database.azure.com"
+guacdbuserpassword=\"$mysqladmin\"
+guacmysqlhostname=\"$mysqldb.mysql.database.azure.com\"
 guacmysqlport="3306"
-guacmysqldatabase="guacamoledb"
-guacmysqlusername="guacadbadminuser@guacamoledemodb"
+guacmysqldatabase=\"$mysqldb\"
+guacmysqlusername=\"$mysqladmin@$mysqldb\"
 
 # Ubuntu and Debian have different package names for libjpeg
 # Ubuntu and Debian versions have differnet package names for libpng-dev
