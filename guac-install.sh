@@ -7,7 +7,7 @@ GUACVERSION="0.9.14"
 apt update
 
 # Get MySQL root password and Guacamole User password
-guacdbuserpassword=mysqladmin
+guacdbuserpassword="mysqlpassword"
 guacmysqlhostname="mysqldb.mysql.database.azure.com"
 guacmysqlport="3306"
 guacmysqldatabase="mysqldb"
