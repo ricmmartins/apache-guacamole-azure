@@ -33,7 +33,7 @@ The Availability Set guarantees a 99.95% SLA for virtual machines and using Azur
 
 ## Setup
 
-### First of all we ned define some environment variables
+### Declaring variables
 
 ```
 # Variables
