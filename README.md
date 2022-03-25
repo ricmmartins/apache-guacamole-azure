@@ -360,7 +360,8 @@ Maybe you want consider the usage of an SSL to be more compliant with security r
   
 1. Ensure you have a valid domain with an A record pointing to the Azure Load Balancer Public IP. A valid domain with and A register defined is a pre-requisite for Certbot. 
     
-2. After address the steps from 1, you must adjust your Nginx config file on both servers, setting the **server_name** directive to point to the name of your domain. (Remember you should connect to the virtual machines pointing to the public ip of the Azure Load Balancer at the ports 21 and 23 to access the VM1 and VM2 respectively.) In this case I'll have this on the Nginx config file of my virtual machines: 
+2. After address the steps from 1, you must adjust your Nginx config file (````/etc/nginx/sites-enabled/default```) on both servers, setting the **server_name** directive to point to the name of your domain.
+(Remember you should connect to the virtual machines pointing to the public ip of the Azure Load Balancer at the ports 21 and 23 to access the VM1 and VM2 respectively.) In this case I'll have this on the Nginx config file of my virtual machines: 
     
 ```
 server_name myguacamolelab.com;    
