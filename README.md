@@ -117,16 +117,9 @@ az vm create --resource-group $rg \
 --nsg $nsg 
 done
 ```
-After executing these commands, two virtual machines will be created inside the previously created Availability Set.
+After executing these commands, two virtual machines will be created inside the Availability Set.
 
-It is important to note that the SSH keys will be stored in the ~/.ssh directory of the host where the commands were executed (Azure Cloud Shell in this case) and to connect to the VMs just run the command below:
-
-```
-ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 21 (To access VM1)
-ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 23 (To access VM2)
-```
-
-_Note that in a few steps the VMs will be placed under a load balancer with inat rules, so we have those ports 21 and 23 to access each one_
+It is important to note that the SSH keys will be stored in the ~/.ssh directory of the host where the commands were executed (Azure Cloud Shell in this case). As the VM's are being created without a public ip address, we will be creating INAT rules a few steps ahead to be able to connect at the VM's through the Azure Load Balancer.
 
 ### Setting NSG rules
 ```
@@ -345,6 +338,13 @@ az network nic ip-config inbound-nat-rule add \
 --nic-name Guacamole-VM2VMNic \
 --resource-group $rg \
 --lb-name $lbname
+```
+
+If you want to connect to the VMs, see below how proceed:
+
+```
+ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 21 (To access VM1)
+ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 23 (To access VM2)
 ```
 
 ## Testing
