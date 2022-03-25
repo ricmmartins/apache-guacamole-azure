@@ -52,14 +52,22 @@ pipdnsname=loadbalancerguacamole
 lbname=lbguacamole
 ```
 
-### Resoruce group creation
+### Resource  group creation
 ```
 az group create --name $rg --location $location
 ```
 
-# MySQL Creation
+### MySQL Creation
 ```
-az mysql server create --resource-group $rg --name $mysqldb --location $location --admin-user $mysqladmin --admin-password $mysqlpassword --sku-name B_Gen5_1 --storage-size 51200 --ssl-enforcement Disabled
+az mysql server create \
+--resource-group $rg \
+--name \$mysqldb \
+--location $location \
+--admin-user $mysqladmin \
+--admin-password $mysqlpassword \
+--sku-name B_Gen5_1 \
+--storage-size 51200 \
+--ssl-enforcement Disabled
 ```
 
 
