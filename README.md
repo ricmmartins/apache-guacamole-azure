@@ -17,7 +17,7 @@ For more information about Guacamole, visit its [architecture page](https://guac
 
 ## Apache Guacamole on Azure Architecture
 
-The drawing below refers to the suggested architecture. This architecture includes a public load balancer that receives external accesses and directs them to two virtual machines in the web layer. The web layer communicates with the data layer where we have a MySQL database responsible for storing login information, accesses and connections.
+The drawing below refers to the suggested architecture. This architecture includes a public load balancer that receives external accesses and directs them to two virtual machines in the web layer. The web layer communicates with the data layer where we have a MySQL database responsible for store login information, accesses and connections.
 
 ![azure-architecture.png](azure-architecture.png)
 
