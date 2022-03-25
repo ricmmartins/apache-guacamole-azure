@@ -430,6 +430,6 @@ sudo systemctl restart nginx
 
 ## Test the SSL
 
-Now you can acess through ```http**s**://<yourdomainname.com>``` 
+Now you can acess through ```https://<yourdomainname.com>``` 
 
 ![ssltest.png](images/ssltest.png)
