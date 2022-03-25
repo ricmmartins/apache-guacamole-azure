@@ -349,7 +349,8 @@ You try to access the client at ```http://<loadbalancer-public-ip>``` or ```http
 ## Adding SSL
     
 Maybe you want consider the usage of an SSL to be more compliant with security requirements. To add SSL we will use [Certbot](https://certbot.eff.org/) to get a certificate from [Let's Encrypt](https://letsencrypt.org/). Here are the steps you need to follow:
-    
+
+  
 1. Ensure you have a valid domain with an A record pointing to the Azure Load Balancer Public IP. A valid domain with and A register defined is a pre-requisite for Certbot. 
     
 2. After address the steps from 1, you must adjust your Nginx config file on both servers, setting the **server_name** directive to point to the name of your domain. (Remember you should connect to the virtual machines pointing to the public ip of the Azure Load Balancer at the ports 21 and 23 to access the VM1 and VM2 respectively.) In this case I'll have this on the Nginx config file of my virtual machines: 
@@ -403,14 +404,32 @@ az network lb rule create \
 --load-distribution SourceIPProtocol
 ```
 
-# Packages to install
-sudo apt install --yes nginx-core
-sudo snap install core; sudo snap refresh core
-sudo snap install --classic certbot
+### Setup and configurations for Certbot
 
-# Certbot
+Connect at each virtual machine and execute the following:
+
+#### Variable definitions
+
+```
 export DOMAIN_NAME="myguacamolelab.com"
 export EMAIL="admin@myguacamolelab.com"
+````
+_Remember to change according your domain_
+
+#### Install snap tool to get certbot
+```
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+```
+
+#### Configure certbot and restart Nginx
+```
 sudo certbot --nginx -d "${DOMAIN_NAME}" -m "${EMAIL}" --agree-tos -n
 sudo systemctl restart nginx    
-    
+```
+
+## Test the SSL
+
+Now you can acess through ```http**s**://<yourdomainname.com>``` 
+
+![ssltest.png](images/ssltest.png)
