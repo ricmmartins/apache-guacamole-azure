@@ -28,6 +28,7 @@ The Availability Set guarantees a 99.95% SLA for virtual machines and using Azur
 * Use the Bash environment in [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart).
 
 [![launch-cloud-shell.png)](launch-cloud-shell.png)](http://shell.azure.com/)
+[![cloud-shell.png)](cloud-shell.png)]
 
 * If you prefer, [install](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) the Azure CLI to run CLI reference commands.
 
