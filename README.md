@@ -158,7 +158,9 @@ done
 for i in `seq 1 2`; do
 az vm run-command invoke -g $rg -n Guacamole-VM$i  \
 --command-id RunShellScript \
---scripts "sudo sed -i.bkp -e 's/mysqlpassword/$mysqlpassword/g' -e 's/mysqldb/$mysqldb/g' -e 's/mysqladmin/$mysqladmin/g' /tmp/guac-install.sh"
+--scripts "sudo sed -i.bkp -e 's/mysqlpassword/$mysqlpassword/g' \
+-e 's/mysqldb/$mysqldb/g' \
+-e 's/mysqladmin/$mysqladmin/g' /tmp/guac-install.sh"
 done
 ```
 
@@ -293,6 +295,11 @@ done
 ```
 
 ### Creating the INAT rules
+
+The INAT rules will allow connections made directly to the load balancer's address to be routed to servers under it according to the chosen port.
+
+In this case, when making the connection on port 21 of the balancer, it will be directed to VM1 on port 22 (SSH) and the connection on port 23 of the balancer will be directed to VM2 on port 22 (SSH).
+
 ```
 az network lb inbound-nat-rule create \
 --resource-group $rg \
