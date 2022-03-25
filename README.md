@@ -342,7 +342,7 @@ az network nic ip-config inbound-nat-rule add \
 
 ## Testing
 
-You try to access the client at http://<loadbalancer-public-ip> or http://<loadbalancer-public-ip-dns-name> and you should see the Guacamole's login screen and use the default user and password (guacadmin/guacadmin) to login: 
+You try to access the client at ```http://<loadbalancer-public-ip>``` or ```http://<loadbalancer-public-ip-dns-name>``` and you should see the Guacamole's login screen and use the default user and password (guacadmin/guacadmin) to login: 
     
 ![guacamolelogin.png](images/guacamolelogin.png)
     
