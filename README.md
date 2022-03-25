@@ -12,6 +12,7 @@ The Guacamole comprises of two main components:
 * Guacamole Client which is a servelet container that user will log in and via web browser.
 
 ![guacamole-architecture.png](guacamole-architecture.png)
+For more information about Guacamole, visit its [architecture page](https://guacamole.apache.org/doc/gug/guacamole-architecture.html).
 
 ## Guacamole on Azure Architecture
 
