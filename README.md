@@ -70,4 +70,14 @@ az mysql server create \
 --ssl-enforcement Disabled
 ```
 
+### MySQL Firewall Settings
+
+```
+az mysql server firewall-rule create \
+--resource-group $rg \
+--server $mysqldb \
+--name AllowYourIP \
+--start-ip-address 0.0.0.0 \
+--end-ip-address 255.255.255.255
+```
 
