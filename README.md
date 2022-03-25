@@ -2,7 +2,7 @@
 
 In this post I'll show you how to create your own jump server using [Apache Guacamole](https://guacamole.apache.org/), an open source tool wich provide similar funcionalities from [Azure Bastion](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview).
 
-## Aapche Guacamole
+## Apache Guacamole
 
 Apache Guacamole is a clientless remote desktop gateway that supports standard protocols like VNC, RDP, and SSH. Clientless means your clients don't need to install anything but just use a web browser to remotely access your fleet of VMs.
 
@@ -15,7 +15,7 @@ The Guacamole comprises of two main components:
 
 For more information about Guacamole, visit its [architecture page](https://guacamole.apache.org/doc/gug/guacamole-architecture.html).
 
-## Guacamole on Azure Architecture
+## Apache Guacamole on Azure Architecture
 
 The drawing below refers to the suggested architecture. This architecture includes a public load balancer that receives external accesses and directs them to two virtual machines in the web layer. The web layer communicates with the data layer where we have a MySQL database responsible for storing login information, accesses and connections.
 
