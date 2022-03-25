@@ -61,7 +61,7 @@ az group create --name $rg --location $location
 ```
 az mysql server create \
 --resource-group $rg \
---name \$mysqldb \
+--name $mysqldb \
 --location $location \
 --admin-user $mysqladmin \
 --admin-password $mysqlpassword \
