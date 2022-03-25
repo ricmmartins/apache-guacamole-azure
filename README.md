@@ -10,7 +10,8 @@ The Guacamole comprises of two main components:
 
 * Guacamole Server which provides guacd which is like a proxy server for the client to connect to the remote server.
 * Guacamole Client which is a servelet container that user will log in and via web browser.
-<img align="center" src="guacamole-architecture.png" />
+
+<img align="center" src="guacamole-architecture.png" width="500"/>
 
 ![guacamole-architecture.png](guacamole-architecture.png)
 
