@@ -373,7 +373,7 @@ export EMAIL="admin@myguacamolelab.com"
 ````
 _Remember to change according your domain_
 
-Now lets install snap tool to get certbot:
+Install snap tool to get certbot:
 
 ```
 sudo snap install core; sudo snap refresh core
