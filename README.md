@@ -100,7 +100,7 @@ az vm availability-set create \
 --platform-update-domain-count 3
 ```
 
-### VM Creation
+### VMs Creation
 ```
 for i in `seq 1 2`; do
 az vm create \
@@ -142,4 +142,193 @@ az network nsg rule create \
 --source-port-range "*" \
 --destination-address-prefix "*" \
 --destination-port-range 80
+```
+
+### Generating the Guacamole setup script locally on the VMs
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "wget https://raw.githubusercontent.com/ricmmartins/apache-guacamole-azure/main/guac-install.sh -O /tmp/guac-install.sh" 
+done
+```
+
+### Adjusting database credentials to match the variables 
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "sudo sed -i.bkp -e 's/mysqlpassword/$mysqlpassword/g' -e 's/mysqldb/$mysqldb/g' -e 's/mysqladmin/$mysqladmin/g' /tmp/guac-install.sh"
+done
+```
+
+### Executing the Guacamole setup script
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "/bin/bash /tmp/guac-install.sh"
+done
+```
+
+### Installing Nginx to be used as Proxy for Tomcat
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript --scripts "sudo apt install --yes nginx-core"
+done
+```
+
+### Configuring NGINX
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "cat <<'EOT' > /etc/nginx/sites-enabled/default
+# Nginx Config
+    server {
+        listen 80;
+        server_name _;
+
+        location / {
+
+
+                proxy_pass http://localhost:8080/;
+                proxy_buffering off;
+                proxy_http_version 1.1;
+                proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+                proxy_set_header Upgrade \$http_upgrade;
+                proxy_set_header Connection \$http_connection;
+                proxy_cookie_path /guacamole/ /;
+                access_log off;
+        }
+}
+EOT"
+done
+```
+
+### Restart NGINX
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "sudo systemctl restart nginx"
+done
+```
+
+### Restart Tomcat
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "sudo systemctl restart tomcat8"
+done
+```
+
+### Change to call guacamole directly at "/" instead of "/guacamole" 
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "sudo /bin/rm -rf /var/lib/tomcat7/webapps/ROOT/* && sudo /bin/cp -pr /var/lib/tomcat8/webapps/guacamole/* /var/lib/tomcat8/webapps/ROOT/"
+done
+```
+
+### Creation of Public IP for the Azure Load Balancer
+```
+az network public-ip create -g $rg -n $lbguacamolepip -l $location \
+--dns-name $pipdnsname \
+--allocation-method static \
+--idle-timeout 4 \
+--sku Standard
+```
+
+### Creation of Azure Load Balancer
+```
+az network lb create -g $rg \
+--name $lbname -l $location \
+--public-ip-address $lbguacamolepip \
+--backend-pool-name backendpool  \
+--frontend-ip-name lbguacafrontend \
+--sku Standard
+```
+
+### Creation of the healthprobe
+```
+az network lb probe create \
+--resource-group $rg \
+--lb-name $lbname \
+--name healthprobe \
+--protocol "http" \
+--port 80 \
+--path / \
+--interval 15 
+```
+
+### Creation of the load balancing rule
+```
+az network lb rule create \
+--resource-group $rg \
+--lb-name $lbname \
+--name lbrule \
+--protocol tcp \
+--frontend-port 80 \
+--backend-port 80 \
+--frontend-ip-name lbguacafrontend \
+--backend-pool-name backendpool \
+--probe-name healthprobe \
+--load-distribution SourceIPProtocol
+```
+
+### Adding the VMs to the Load Balancer
+```
+for i in `seq 1 2`; do
+az network nic ip-config update \
+--name ipconfigGuacamole-VM$i \
+--nic-name Guacamole-VM$iVMNic \
+--resource-group $rg \
+--lb-address-pools backendpool \
+--lb-name $lbname 
+done
+```
+
+### Creating the INAT rules
+```
+az network lb inbound-nat-rule create \
+--resource-group $rg \
+--lb-name $lbname \
+--name ssh1 \
+--protocol tcp \
+--frontend-port 21 \
+--backend-port 22 \
+--frontend-ip-name lbguacafrontend
+```
+
+```
+az network lb inbound-nat-rule create \
+--resource-group $rg \
+--lb-name $lbname \
+--name ssh2 \
+--protocol tcp \
+--frontend-port 23 \
+--backend-port 22 \
+--frontend-ip-name lbguacafrontend
+```
+
+```
+az network nic ip-config inbound-nat-rule add \
+--inbound-nat-rule ssh1 \
+--ip-config-name ipconfigGuacamole-VM1 \
+--nic-name Guacamole-VM1VMNic \
+--resource-group $rg \
+--lb-name $lbname 
+```
+
+```
+az network nic ip-config inbound-nat-rule add \
+--inbound-nat-rule ssh2 \
+--ip-config-name ipconfigGuacamole-VM2 \
+--nic-name Guacamole-VM2VMNic \
+--resource-group $rg \
+--lb-name $lbname
 ```
