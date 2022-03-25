@@ -108,13 +108,13 @@ az vm create \
 --name Guacamole-VM$i \
 --availability-set $avset \
 --size Standard_DS1_v2 \
---image Canonical:UbuntuServer:18.04-LTS:latest  \
+--image Canonical:UbuntuServer:18.04-LTS:latest \
 --admin-username $vmadmin \
 --generate-ssh-keys \
 --public-ip-address "" \
 --vnet-name $vnet \
 --subnet  $snet \
---nsg $nsg 
+--nsg $nsg \
 --no-wait \
 done
 ```
