@@ -345,3 +345,72 @@ az network nic ip-config inbound-nat-rule add \
 You try to access the client at http://<loadbalancer-public-ip> or http://<loadbalancer-public-ip-dns-name> and you should see the Guacamole's login screen and use the default user and password (guacadmin/guacadmin) to login: 
     
 ![guacamolelogin.png](images/guacamolelogin.png)
+    
+## Adding SSL
+    
+Maybe you want consider the usage of an SSL to be more compliant with security requirements. To add SSL we will use [Certbot](https://certbot.eff.org/) to get a certificate from [Let's Encrypt](https://letsencrypt.org/). Here are the steps you need to follow:
+    
+1. Ensure you have a valid domain with an A record pointing to the Azure Load Balancer Public IP. A valid domain with and A register defined is a pre-requisite for Certbot. 
+    
+2. After address the steps from 1, you must adjust your Nginx config file on both servers, setting the **server_name** directive to point to the name of your domain. (Remember you should connect to the virtual machines pointing to the public ip of the Azure Load Balancer at the ports 21 and 23 to access the VM1 and VM2 respectively.) In this case I'll have this on the Nginx config file of my virtual machines: 
+    
+``
+server_name myguacamolelab.com;    
+``
+ 
+3. You you have to open the port 443 on the NSG:
+
+````
+az network nsg rule create \
+--resource-group $rg \
+--nsg-name $nsg \
+--name ssl-rule \
+--access Allow \
+--protocol Tcp \
+--direction Inbound \
+--priority 300 \
+--source-address-prefix Internet \
+--source-port-range "*" \
+--destination-address-prefix "*" \
+--destination-port-range 443
+```
+
+4. Create the healthprobe for the port 443
+```
+az network lb probe create \
+--resource-group $rg \
+--lb-name $lbname \
+--name healthprobe-https \
+--protocol "https" \
+--port 443 \
+--path / \
+--interval 15 
+```
+
+5. Create the load balancer rule for the port 443 on the Load Balancer
+
+```
+az network lb rule create \
+--resource-group $rg \
+--lb-name $lbname \
+--name lbrule-https \
+--protocol tcp \
+--frontend-port 443 \
+--backend-port 443 \
+--frontend-ip-name lbguacafrontend \
+--backend-pool-name backendpool \
+--probe-name healthprobe-https \
+--load-distribution SourceIPProtocol
+```
+
+# Packages to install
+sudo apt install --yes nginx-core
+sudo snap install core; sudo snap refresh core
+sudo snap install --classic certbot
+
+# Certbot
+export DOMAIN_NAME="myguacamolelab.com"
+export EMAIL="admin@myguacamolelab.com"
+sudo certbot --nginx -d "${DOMAIN_NAME}" -m "${EMAIL}" --agree-tos -n
+sudo systemctl restart nginx    
+    
