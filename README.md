@@ -19,7 +19,7 @@ For more information about Guacamole, visit its [architecture page](https://guac
 
 The drawing below refers to the suggested architecture. This architecture includes a public load balancer that receives external accesses and directs them to two virtual machines in the web layer. The web layer communicates with the data layer where we have a MySQL database responsible for store login information, accesses and connections.
 
-![azure-architecture.png](azure-architecture.png)
+![azure-architecture.png](images/azure-architecture.png)
 
 The Availability Set guarantees a 99.95% SLA for virtual machines and using Azure Database for MySQL, a highly available, scalable, managed database as a service guarantees a 99.99% SLA.
 
@@ -29,7 +29,7 @@ The Availability Set guarantees a 99.95% SLA for virtual machines and using Azur
 
 [![launch-cloud-shell.png)](launch-cloud-shell.png)](http://shell.azure.com/)
 
-[![cloud-shell.png)](cloud-shell.png)
+[![cloud-shell.png)](images/cloud-shell.png)
 
 ## Setup
 
@@ -344,4 +344,4 @@ az network nic ip-config inbound-nat-rule add \
 
 You try to access the client at http://<loadbalancer-public-ip> or http://<loadbalancer-public-ip-dns-name> and you should see the Guacamole's login screen and use the default user and password (guacadmin/guacadmin) to login: 
     
-![guacamolelogin.png](guacamolelogin.png)
+![guacamolelogin.png](images/guacamolelogin.png)
