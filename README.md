@@ -283,17 +283,24 @@ az network lb rule create \
 ```
 
 ### Adding the VMs to the Load Balancer
+#### Adding the VM1 to the Load Balancer
 ```
-for i in `seq 1 2`; do
 az network nic ip-config update \
---name ipconfigGuacamole-VM$i \
---nic-name Guacamole-VM$iVMNic \
+--name ipconfigGuacamole-VM1 \
+--nic-name Guacamole-VM1VMNic \
 --resource-group $rg \
 --lb-address-pools backendpool \
 --lb-name $lbname 
-done
 ```
-
+#### Adding the VM2 to the Load Balancer
+```
+az network nic ip-config update \
+--name ipconfigGuacamole-VM2 \
+--nic-name Guacamole-VM2VMNic \
+--resource-group $rg \
+--lb-address-pools backendpool \
+--lb-name $lbname 
+```
 ### Creating the INAT rules
 
 The INAT rules will allow connections made directly to the load balancer's address to be routed to servers under it according to the chosen port.
