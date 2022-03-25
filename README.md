@@ -112,10 +112,10 @@ az vm create \
 --admin-username $vmadmin \
 --generate-ssh-keys \
 --public-ip-address "" \
+-- no-wait \
 --vnet-name $vnet \
 --subnet  $snet \
 --nsg $nsg \
---no-wait \
 done
 ```
 
@@ -128,7 +128,7 @@ ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 21 (To access VM1)
 ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 23 (To access VM2)
 ```
 
-_Note that in a few steps the VMs will be placed under a load balancer with inat rules, because this we'll have those ports 21 and 23 to access each one_
+_Note that in a few steps the VMs will be placed under a load balancer with inat rules, because this we have those ports 21 and 23 to access each one_
 
 ### Setting NSG rules
 ```
