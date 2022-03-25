@@ -354,13 +354,13 @@ Maybe you want consider the usage of an SSL to be more compliant with security r
     
 2. After address the steps from 1, you must adjust your Nginx config file on both servers, setting the **server_name** directive to point to the name of your domain. (Remember you should connect to the virtual machines pointing to the public ip of the Azure Load Balancer at the ports 21 and 23 to access the VM1 and VM2 respectively.) In this case I'll have this on the Nginx config file of my virtual machines: 
     
-``
+```
 server_name myguacamolelab.com;    
-``
+```
  
 3. You you have to open the port 443 on the NSG:
 
-````
+```
 az network nsg rule create \
 --resource-group $rg \
 --nsg-name $nsg \
