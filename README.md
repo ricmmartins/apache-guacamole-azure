@@ -31,3 +31,24 @@ The Availability Set guarantees a 99.95% SLA for virtual machines and using Azur
 
 [![cloud-shell.png)](cloud-shell.png)
 
+## Setup
+
+### First of all we ned define some environment variables
+
+```
+# Variables
+rg=rg-guacamole
+location=eastus
+mysqldb=guacamoledb
+mysqladmin=guacadbadminuser
+mysqlpassword=MyStrongPassW0rd
+vnet=myVnet
+snet=mySubnet
+avset=guacamoleAvSet
+vmadmin=guacauser
+nsg=NSG-Guacamole
+lbguacamolepip=lbguacamolepip
+pipdnsname=loadbalancerguacamole
+lbname=lbguacamole
+```
+
