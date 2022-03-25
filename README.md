@@ -100,7 +100,7 @@ az vm availability-set create \
 --platform-update-domain-count 3
 ```
 
-# VM Creation
+### VM Creation
 ```
 for i in `seq 1 2`; do
 az vm create \
@@ -126,4 +126,20 @@ It is important to note that the SSH keys will be stored in the ~/.ssh directory
 ```
 ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 21 (To access VM1)
 ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 23 (To access VM2)
+```
+
+### Setting NSG rules
+```
+az network nsg rule create \
+--resource-group $rg \
+--nsg-name $nsg \
+--name web-rule \
+--access Allow \
+--protocol Tcp \
+--direction Inbound \
+--priority 200 \
+--source-address-prefix Internet \
+--source-port-range "*" \
+--destination-address-prefix "*" \
+--destination-port-range 80
 ```
