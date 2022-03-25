@@ -103,8 +103,7 @@ az vm availability-set create \
 ### VMs Creation
 ```
 for i in `seq 1 2`; do
-az vm create \
---resource-group $rg \
+az vm create --resource-group $rg \
 --name Guacamole-VM$i \
 --availability-set $avset \
 --size Standard_DS1_v2 \
@@ -112,13 +111,12 @@ az vm create \
 --admin-username $vmadmin \
 --generate-ssh-keys \
 --public-ip-address "" \
--- no-wait \
+--no-wait \
 --vnet-name $vnet \
---subnet  $snet \
---nsg $nsg \
+--subnet $snet \
+--nsg $nsg 
 done
 ```
-
 After executing these commands, two virtual machines will be created inside the previously created Availability Set.
 
 It is important to note that the SSH keys will be stored in the ~/.ssh directory of the host where the commands were executed (Azure Cloud Shell in this case) and to connect to the VMs just run the command below:
