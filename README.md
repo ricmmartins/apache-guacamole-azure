@@ -81,3 +81,49 @@ az mysql server firewall-rule create \
 --end-ip-address 255.255.255.255
 ```
 
+### VNET creation
+```
+az network vnet create \
+--resource-group $rg \
+--name $vnet \
+--address-prefix 10.0.0.0/16 -\
+-subnet-name $snet \
+--subnet-prefix 10.0.1.0/24
+```
+
+### Availability set creation
+```
+az vm availability-set create \
+--resource-group $rg \
+--name $avset \
+--platform-fault-domain-count 2 \
+--platform-update-domain-count 3
+```
+
+# VM Creation
+```
+for i in `seq 1 2`; do
+az vm create \
+--resource-group $rg \
+--name Guacamole-VM$i \
+--availability-set $avset \
+--size Standard_DS1_v2 \
+--image Canonical:UbuntuServer:18.04-LTS:latest  \
+--admin-username $vmadmin \
+--generate-ssh-keys \
+--public-ip-address "" \
+--vnet-name $vnet \
+--subnet  $snet \
+--nsg $nsg 
+--no-wait \
+done
+```
+
+After executing these commands, two virtual machines will be created inside the previously created Availability Set.
+
+It is important to note that the SSH keys will be stored in the ~/.ssh directory of the host where the commands were executed (Azure Cloud Shell in this case) and to connect to the VMs just run the command below:
+
+```
+ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 21 (To access VM1)
+ssh -i .ssh/id_rsa guacauser@<loadbalancer-public-ip> -p 23 (To access VM2)
+```
