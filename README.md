@@ -418,7 +418,7 @@ az vm run-command invoke -g $rg -n Guacamole-VM$i  \
 done
 ```
 
-3. You you have to open the port 443 on the NSG:
+3. Now you need open the port 443 on the NSG:
 
 ```
 az network nsg rule create \
@@ -436,6 +436,7 @@ az network nsg rule create \
 ```
 
 4. Create the healthprobe for the port 443
+
 ```
 az network lb probe create \
 --resource-group $rg \
