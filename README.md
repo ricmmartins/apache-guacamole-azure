@@ -383,8 +383,7 @@ Install snap tool to get certbot:
 for i in `seq 1 2`; do
 az vm run-command invoke -g $rg -n Guacamole-VM$i  \
 --command-id RunShellScript \
---scripts "sudo snap install core; sudo snap refresh core" \
---output -o
+--scripts "sudo snap install core; sudo snap refresh core" 
 done
 ```
 
@@ -394,8 +393,7 @@ Install and configure Certbot:
 for i in `seq 1 2`; do
 az vm run-command invoke -g $rg -n Guacamole-VM$i  \
 --command-id RunShellScript \
---scripts "sudo snap install --classic certbot" \
---output -o
+--scripts "sudo snap install --classic certbot" 
 done
 ```
 
@@ -403,8 +401,7 @@ done
 for i in `seq 1 2`; do
 az vm run-command invoke -g $rg -n Guacamole-VM$i  \
 --command-id RunShellScript \
---scripts "sudo certbot --nginx -d "${DOMAIN_NAME}" -m "${EMAIL}" --agree-tos -n" \
---output -o
+--scripts "sudo certbot --nginx -d "${DOMAIN_NAME}" -m "${EMAIL}" --agree-tos -n" 
 done
 ```
 Restart Nginx:
@@ -413,8 +410,7 @@ Restart Nginx:
 for i in `seq 1 2`; do
 az vm run-command invoke -g $rg -n Guacamole-VM$i  \
 --command-id RunShellScript \
---scripts "sudo systemctl restart nginx" \ 
---output -o
+--scripts "sudo systemctl restart nginx" 
 done
 ```
 
