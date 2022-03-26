@@ -353,7 +353,7 @@ You try to access the client at ```http://<loadbalancer-public-ip>``` or ```http
     
 ![guacamolelogin.png](images/guacamolelogin.png)
     
-## Adding SSL
+## Adding SSL in 5 steps
     
 Maybe you want consider the usage of an SSL to be more compliant with security requirements. To add SSL we will use [Certbot](https://certbot.eff.org/) to get a certificate from [Let's Encrypt](https://letsencrypt.org/). Here are the steps you need to follow:
 
@@ -468,6 +468,42 @@ Now you can acess through ```https://<yourdomainname.com>```
 
 ![ssltest.png](images/ssltest.png)
 
+## Plus!
+
+Here I’m going to show you how to automate the process of creating a cron job that will automatically renew the expired certificates.
+
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "cat <<'EOT' > /etc/cron.d/certbot
+# /etc/cron.d/certbot: crontab entries for the certbot package
+#
+# Upstream recommends attempting renewal twice a day
+#
+# Eventually, this will be an opportunity to validate certificates
+# haven't been revoked, etc.  Renewal will only occur if expiration
+# is within 30 days.
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+0 */12 * * * root test -x /usr/bin/certbot  -a \! -d /run/systemd/system &&  perl -e 'sleep int(rand(43200))' &&  certbot -q renew
+EOT"
+done
+```
+
+
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i \
+--command-id RunShellScript \
+--scripts "systemctl restart cron"
+done
+```
+
+Now this cron job will check if some of the certificates are expired it will renew it automatically. 
+
+This cron job would get triggered twice every day to renew certificate. Line certbot -q renew will check if certificate is getting expired in next 30 days or not. If it is getting expired then it will auto renew it quietly without generating output. If certificate is not getting expired then it will not perform any action. While renewing certificate it will use same information provided during certificate creation such as email address, domain name, web server root path etc.
 
 ## Conclusion
 
