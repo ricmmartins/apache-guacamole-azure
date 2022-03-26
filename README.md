@@ -470,3 +470,8 @@ az network lb rule create \
 Now you can acess through ```https://<yourdomainname.com>``` 
 
 ![ssltest.png](images/ssltest.png)
+
+
+## Conclusion
+
+Enjoy your jump server environment, taking the advantage of an architecture high-available and scalable. You need more information about how to add your connections, take a look on the oficial documentation from Apache Guacamole here [https://guacamole.apache.org/doc/gug/administration.html](https://guacamole.apache.org/doc/gug/administration.html)
