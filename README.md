@@ -359,13 +359,17 @@ Maybe you want consider the usage of an SSL to be more compliant with security r
 
 1. Ensure you have a valid domain with an A record pointing to the Azure Load Balancer Public IP. A valid domain with and A register defined is a pre-requisite for Certbot. 
 
-2. After address the steps from 1, you must adjust your Nginx config file ```/etc/nginx/sites-enabled/default``` on both servers, setting the **server_name** directive to point to the name of your domain (Remember you should connect to the virtual machines pointing to the public ip of the Azure Load Balancer at the ports 21 and 23 to access the VM1 and VM2 respectively):
+2. After address the steps from 1, you must adjust your Nginx config file ```/etc/nginx/sites-enabled/default``` on both servers, setting the **server_name** directive to point to the name of your domain:
     
 ```
-server_name myguacamolelab.com;    
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "sudo sed -i.bkp -e 's/_;/myguacamolelab.com;/g' /etc/nginx/sites-enabled/default" 
+done    
 ```
 
-Then let's proceed to the setup and configurations for Certbot. Run the following commands at each virtual machine to set the environment variables: 
+Then let's proceed to the setup and configurations for Certbot setting new environment variables: 
 
 ```
 export DOMAIN_NAME="myguacamolelab.com"
@@ -376,15 +380,42 @@ _Remember to change according your domain_
 Install snap tool to get certbot:
 
 ```
-sudo snap install core; sudo snap refresh core
-sudo snap install --classic certbot
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "sudo snap install core; sudo snap refresh core" \
+--output -o
+done
 ```
 
-Configure Certbot and restart Nginx:
+Install and configure Certbot:
 
 ```
-sudo certbot --nginx -d "${DOMAIN_NAME}" -m "${EMAIL}" --agree-tos -n
-sudo systemctl restart nginx    
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "sudo snap install --classic certbot" \
+--output -o
+done
+```
+
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "sudo certbot --nginx -d "${DOMAIN_NAME}" -m "${EMAIL}" --agree-tos -n" \
+--output -o
+done
+```
+Restart Nginx:
+
+```
+for i in `seq 1 2`; do
+az vm run-command invoke -g $rg -n Guacamole-VM$i  \
+--command-id RunShellScript \
+--scripts "sudo systemctl restart nginx" \ 
+--output -o
+done
 ```
 
 3. You you have to open the port 443 on the NSG:
