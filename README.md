@@ -173,7 +173,7 @@ az vm run-command invoke -g $rg -n Guacamole-VM$i \
 --command-id RunShellScript --scripts "sudo apt install --yes nginx-core"
 done
 ```
-_Here are more information about [Proying Guacamole](https://guacamole.apache.org/doc/gug/reverse-proxy.html)_
+_Here are more information about Proxying Guacamole: [https://guacamole.apache.org/doc/gug/reverse-proxy.html}(https://guacamole.apache.org/doc/gug/reverse-proxy.html)_
 
 ### Configuring NGINX
 ```
