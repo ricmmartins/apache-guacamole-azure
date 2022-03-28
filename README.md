@@ -508,3 +508,7 @@ This cron job would get triggered twice every day to renew certificate. Line cer
 ## Conclusion
 
 Enjoy your own "jump-server environment", leveraging a high-available and scalable architecture. If you need more information about how to add your connections, take a look on the oficial documentation from Apache Guacamole here: [https://guacamole.apache.org/doc/gug/administration.html](https://guacamole.apache.org/doc/gug/administration.html)
+
+
+## Show your support
+Give a ⭐️ if this content helped you!
