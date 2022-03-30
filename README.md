@@ -2,14 +2,16 @@
 
 In this post I'll show you how to create your own jump server using [Apache Guacamole](https://guacamole.apache.org/), an open source tool wich provide similar funcionalities from [Azure Bastion](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview).
 
+The environment to be built will leverage the usage of Azure Database for MySQL (DBaaS), Azure Load Balancer, and Virtual Machines with Nginx as Reverse Proxy, Tomcat as Application Service, and the Certbot to get free SSL certificates from Let's Encrypt.
+
 ## Apache Guacamole
 
 Apache Guacamole is a clientless remote desktop gateway that supports standard protocols like VNC, RDP, and SSH. Clientless means your clients don't need to install anything but just use a web browser to remotely access your fleet of VMs.
 
-The Guacamole comprises of two main components:
+The Guacamole comprises two main components:
 
 * Guacamole Server which provides guacd which is like a proxy server for the client to connect to the remote server.
-* Guacamole Client which is a servelet container that user will log in and via web browser.
+* Guacamole Client is a servelet container that users will log in via web browser.
 
 ![guacamole-architecture.png](images/guacamole-architecture.png)
 
@@ -21,7 +23,7 @@ The drawing below refers to the suggested architecture. This architecture includ
 
 ![azure-architecture.png](images/azure-architecture.png)
 
-The Availability Set guarantees a 99.95% SLA for virtual machines and using Azure Database for MySQL, a highly available, scalable, managed database as a service guarantees a 99.99% SLA.
+The [Availability Set](https://docs.microsoft.com/en-us/azure/virtual-machines/availability#availability-sets) guarantees a 99.95% SLA for virtual machines and using Azure Database for MySQL, a highly available, scalable, managed database as a service guarantees a [99.99% SLA](https://docs.microsoft.com/en-us/azure/mysql/concepts-high-availability).
 
 ## Prerequisites
 
