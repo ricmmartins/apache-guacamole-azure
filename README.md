@@ -1,6 +1,6 @@
 # Deploying Apache Guacamole on Azure
 
-In this post I'll show you how to create your own jump server using [Apache Guacamole](https://guacamole.apache.org/), an open source tool wich provide similar funcionalities from [Azure Bastion](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview).
+In this post, I'll show you how to create your jump server using [Apache Guacamole](https://guacamole.apache.org/), an open-source tool that provides similar functionalities from [Azure Bastion](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview).
 
 The environment to be built will leverage the usage of Azure Database for MySQL (DBaaS), Azure Load Balancer, and Virtual Machines with Nginx as Reverse Proxy, Tomcat as Application Service, and the Certbot to get free SSL certificates from Let's Encrypt.
 
@@ -19,15 +19,15 @@ For more information about Guacamole, visit its [architecture page](https://guac
 
 ## Apache Guacamole on Azure Architecture
 
-The drawing below refers to the suggested architecture. This architecture includes a public load balancer that receives external accesses and directs them to two virtual machines in the web layer. The web layer communicates with the data layer where we have a MySQL database responsible for store login information, accesses and connections.
+The drawing below refers to the suggested architecture. This architecture includes a public load balancer that receives external accesses and directs them to two virtual machines in the web layer. The web layer communicates with the data layer where we have a MySQL database responsible for storing login information, accesses, and connections.
 
 ![azure-architecture.png](images/azure-architecture.png)
 
-The [Availability Set](https://docs.microsoft.com/en-us/azure/virtual-machines/availability#availability-sets) guarantees a 99.95% SLA for virtual machines and using Azure Database for MySQL, a highly available, scalable, managed database as a service guarantees a [99.99% SLA](https://docs.microsoft.com/en-us/azure/mysql/concepts-high-availability).
+The [Availability Set](https://docs.microsoft.com/en-us/azure/virtual-machines/availability#availability-sets) guarantees a 99.95% SLA for virtual machines and using Azure Database for MySQL, a highly available, scalable, managed database as service guarantees a [99.99% SLA](https://docs.microsoft.com/en-us/azure/mysql/concepts-high-availability).
 
 ## Prerequisites
 
-* I recommend use the Bash environment in [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart). If you prefer run on your own Windows, Linux or MacOs, [install](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) the Azure CLI to run referenced commands.
+* I recommend using the Bash environment in [Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/quickstart). If you prefer to run on your own Windows, Linux, or macOS, [install](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) the Azure CLI to run referenced commands.
 
 [![launch-cloud-shell.png)](images/launch-cloud-shell.png)](http://shell.azure.com/)
 
@@ -121,7 +121,7 @@ done
 ```
 After executing these commands, two virtual machines will be created inside the Availability Set.
 
-It is important to note that the SSH keys will be stored in the ~/.ssh directory of the host where the commands were executed (Azure Cloud Shell in this case). As the VM's are being created without a public ip address, we will be creating INAT rules a few steps ahead to be able to connect at the VM's through the Azure Load Balancer.
+It is important to note that the SSH keys will be stored in the ~/.ssh directory of the host where the commands were executed (Azure Cloud Shell in this case). As the VMs are being created without a public ip address, we will be creating INAT rules a few steps ahead to be able to connect to the VMs through the Azure Load Balancer.
 
 ### Setting NSG rules
 ```
@@ -357,11 +357,11 @@ You try to access the client at ```http://<loadbalancer-public-ip>``` or ```http
     
 ## Adding SSL in 5 steps
     
-Maybe you want consider the usage of an SSL to be more compliant with security requirements. To add SSL we will use [Certbot](https://certbot.eff.org/) to get a certificate from [Let's Encrypt](https://letsencrypt.org/). Here are the steps you need to follow:
+Maybe you want to consider the usage of an SSL to be more compliant with security requirements. To add SSL we will use [Certbot](https://certbot.eff.org/) to get a certificate from [Let's Encrypt](https://letsencrypt.org/). Here are the steps you need to follow:
 
-1. Ensure you have a valid domain with an A record pointing to the Azure Load Balancer Public IP. A valid domain with and A register defined is a pre-requisite for Certbot. 
+1. Ensure you have a valid domain with an A record pointing to the Azure Load Balancer Public IP. A valid domain with an A register defined is a pre-requisite for Certbot. 
 
-2. After address the steps from 1, you must adjust your Nginx config file ```/etc/nginx/sites-enabled/default``` on both servers, setting the **server_name** directive to point to the name of your domain:
+2. After addressing the steps from 1, you must adjust your Nginx config file ```/etc/nginx/sites-enabled/default``` on both servers, setting the **server_name** directive to point to the name of your domain:
     
 ```
 for i in `seq 1 2`; do
@@ -466,7 +466,7 @@ az network lb rule create \
 
 ## Test the SSL
 
-Now you can acess through ```https://<yourdomainname.com>``` 
+Now you can access through ```https://<yourdomainname.com>``` 
 
 ![ssltest.png](images/ssltest.png)
 
@@ -503,13 +503,13 @@ az vm run-command invoke -g $rg -n Guacamole-VM$i \
 done
 ```
 
-Now this cron job will check if some of the certificates are expired it will renew it automatically. 
+Now, this cron job will check if some of the certificates are expired it will renew them automatically. 
 
-This cron job would get triggered twice every day to renew certificate. Line certbot -q renew will check if certificate is getting expired in next 30 days or not. If it is getting expired then it will auto renew it quietly without generating output. If certificate is not getting expired then it will not perform any action. While renewing certificate it will use same information provided during certificate creation such as email address, domain name, web server root path etc.
+This cron job would get triggered twice every day to renew the certificate. Line certbot -q renew will check if the certificate is getting expired in the next 30 days or not. If it is getting expired then it will auto-renew it quietly without generating output. If the certificate is not getting expired then it will not perform any action. While renewing the certificate it will use the same information provided during certificate creation such as email address, domain name, web server root path, etc.
 
 ## Conclusion
 
-Enjoy your own "jump-server environment", leveraging a high-available and scalable architecture. If you need more information about how to add your connections, take a look on the oficial documentation from Apache Guacamole here: [https://guacamole.apache.org/doc/gug/administration.html](https://guacamole.apache.org/doc/gug/administration.html)
+Enjoy your own "jump-server environment", leveraging a high-available and scalable architecture. If you need more information about how to add your connections, take a look at the official documentation from Apache Guacamole here: [https://guacamole.apache.org/doc/gug/administration.html](https://guacamole.apache.org/doc/gug/administration.html)
 
 
 ## Show your support
