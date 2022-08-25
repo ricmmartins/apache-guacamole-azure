@@ -4,6 +4,8 @@ In this post, I'll show you how to create your jump server using [Apache Guacamo
 
 The environment to be built will leverage the usage of Azure Database for MySQL (DBaaS), Azure Load Balancer, and Virtual Machines with Nginx as Reverse Proxy, Tomcat as Application Service, and the Certbot to get free SSL certificates from Let's Encrypt.
 
+This article was published at https://docs.microsoft.com/en-us/azure/architecture/example-scenario/infrastructure/apache-guacamole for a broader audience.
+
 ## Apache Guacamole
 
 Apache Guacamole is a clientless remote desktop gateway that supports standard protocols like VNC, RDP, and SSH. Clientless means your clients don't need to install anything but just use a web browser to remotely access your fleet of VMs.
